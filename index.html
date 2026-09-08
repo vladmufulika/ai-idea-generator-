@@ -77,11 +77,17 @@
     ];
 
     function generateIdea() {
-      const randomIdea =
-        ideas[Math.floor(Math.random() * ideas.length)];
+  if (ideas.length === 0) {
+    document.getElementById("idea").textContent =
+      "Все идеи показаны! 🔄 Обнови страницу для нового круга.";
+    return;
+  }
 
-      document.getElementById("idea").textContent = randomIdea;
-    }
+  const randomIndex = Math.floor(Math.random() * ideas.length);
+  const randomIdea = ideas.splice(randomIndex, 1)[0];
+
+  document.getElementById("idea").textContent = randomIdea;
+}
   </script>
 </body>
 </html>
