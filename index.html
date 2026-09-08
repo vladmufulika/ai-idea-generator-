@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Idea Generator</title>
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #111827, #312e81);
+      color: white;
+      padding: 20px;
+    }
+
+    .card {
+      max-width: 650px;
+      width: 100%;
+      padding: 40px;
+      text-align: center;
+      border-radius: 25px;
+      background: rgba(255,255,255,0.1);
+    }
+
+    h1 {
+      font-size: 45px;
+    }
+
+    #idea {
+      margin: 30px 0;
+      padding: 25px;
+      border-radius: 18px;
+      background: rgba(0,0,0,0.25);
+      font-size: 21px;
+      line-height: 1.5;
+    }
+
+    button {
+      padding: 16px 25px;
+      border: none;
+      border-radius: 14px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+    <h1>💡 AI Idea Generator</h1>
+
+    <p>Нажми кнопку и получи идею для бизнеса или проекта.</p>
+
+    <div id="idea">
+      Твоя идея появится здесь 👇
+    </div>
+
+    <button onclick="generateIdea()">
+      Сгенерировать идею
+    </button>
+  </div>
+
+  <script>
+    const ideas = [
+      "🤖 Telegram-бот, который помогает бизнесу отвечать клиентам с помощью ИИ.",
+      "📦 Сервис, который сравнивает цены в интернет-магазинах.",
+      "🎥 ИИ-сервис, который превращает длинное видео в короткие ролики.",
+      "🍕 Приложение, которое придумывает рецепты из продуктов дома.",
+      "📅 Умный помощник для записи клиентов.",
+      "💼 Сервис, который создаёт резюме под вакансию.",
+      "📈 AI-помощник для анализа продаж."
+    ];
+
+    function generateIdea() {
+      const randomIdea =
+        ideas[Math.floor(Math.random() * ideas.length)];
+
+      document.getElementById("idea").textContent = randomIdea;
+    }
+  </script>
+</body>
+</html>
