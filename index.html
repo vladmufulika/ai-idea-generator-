@@ -5,89 +5,300 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AI Idea Generator</title>
   <style>
+    * {
+      box-sizing: border-box;
+    }
     body {
       margin: 0;
       min-height: 100vh;
+      padding: 20px;
       display: flex;
       justify-content: center;
       align-items: center;
       font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #111827, #312e81);
       color: white;
-      padding: 20px;
+      background:
+        radial-gradient(circle at top, #4f46e5, transparent 45%),
+        linear-gradient(135deg, #0f172a, #111827);
     }
-
     .card {
-      max-width: 650px;
       width: 100%;
-      padding: 40px;
+      max-width: 720px;
+      padding: 35px 25px;
       text-align: center;
-      border-radius: 25px;
-      background: rgba(255,255,255,0.1);
+      border-radius: 28px;
+      background: rgba(255, 255, 255, 0.09);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(15px);
+      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.35);
     }
-
     h1 {
-      font-size: 45px;
+      margin: 0;
+      font-size: 42px;
     }
-
+    .subtitle {
+      margin: 12px 0 30px;
+      color: #cbd5e1;
+      font-size: 17px;
+    }
     #idea {
-      margin: 30px 0;
-      padding: 25px;
-      border-radius: 18px;
-      background: rgba(0,0,0,0.25);
-      font-size: 21px;
-      line-height: 1.5;
+      min-height: 260px;
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      border-radius: 20px;
+      background: rgba(0, 0, 0, 0.25);
+      text-align: left;
     }
-
+    .idea-title {
+      margin-bottom: 20px;
+      text-align: center;
+      font-size: 27px;
+      font-weight: bold;
+    }
+    .idea-text {
+      margin-bottom: 14px;
+      font-size: 18px;
+      line-height: 1.55;
+    }
+    .label {
+      font-weight: bold;
+    }
     button {
-      padding: 16px 25px;
+      margin-top: 25px;
+      padding: 17px 28px;
       border: none;
-      border-radius: 14px;
+      border-radius: 15px;
+      background: white;
+      color: #111827;
       font-size: 18px;
       font-weight: bold;
       cursor: pointer;
+      transition: transform 0.15s, opacity 0.15s;
+    }
+    button:hover {
+      transform: scale(1.04);
+    }
+    button:active {
+      transform: scale(0.97);
+    }
+    .counter {
+      margin-top: 18px;
+      color: #94a3b8;
+      font-size: 14px;
+    }
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 32px;
+      }
+      .idea-title {
+        font-size: 23px;
+      }
+      .idea-text {
+        font-size: 16px;
+      }
+      .card {
+        padding: 28px 18px;
+      }
     }
   </style>
 </head>
-
 <body>
   <div class="card">
     <h1>💡 AI Idea Generator</h1>
-
-    <p>Нажми кнопку и получи идею для бизнеса или проекта.</p>
-
-    <div id="idea">
-      Твоя идея появится здесь 👇
+    <div class="subtitle">
+      Генератор идей для бизнеса и новых проектов
     </div>
-
+    <div id="idea">
+      <div class="idea-title">
+        🚀 Готов к новой идее?
+      </div>
+      <div class="idea-text">
+        Нажми кнопку ниже — и генератор соберёт уникальную комбинацию.
+      </div>
+    </div>
     <button onclick="generateIdea()">
-      Сгенерировать идею
+      ✨ Сгенерировать идею
     </button>
+    <div class="counter">
+      Сгенерировано: <span id="counter">0</span>
+    </div>
   </div>
-
   <script>
-    const ideas = [
-      "🤖 Telegram-бот, который помогает бизнесу отвечать клиентам с помощью ИИ.",
-      "📦 Сервис, который сравнивает цены в интернет-магазинах.",
-      "🎥 ИИ-сервис, который превращает длинное видео в короткие ролики.",
-      "🍕 Приложение, которое придумывает рецепты из продуктов дома.",
-      "📅 Умный помощник для записи клиентов.",
-      "💼 Сервис, который создаёт резюме под вакансию.",
-      "📈 AI-помощник для анализа продаж."
+    /*
+      =====================================
+      НАСТРОЙКИ ГЕНЕРАТОРА
+      =====================================
+    */
+    const niches = [
+      "ресторанов",
+      "кафе",
+      "салонов красоты",
+      "фитнес-клубов",
+      "интернет-магазинов",
+      "блогеров",
+      "туристов",
+      "студентов",
+      "автомобилистов",
+      "владельцев домашних животных",
+      "малого бизнеса",
+      "фрилансеров",
+      "родителей",
+      "путешественников",
+      "фотографов",
+      "музыкантов",
+      "дизайнеров",
+      "программистов",
+      "риелторов",
+      "отелей",
+      "водителей",
+      "онлайн-школ",
+      "спортсменов",
+      "геймеров",
+      "создателей контента",
+      "магазинов одежды",
+      "медицинских клиник",
+      "юристов",
+      "бухгалтеров",
+      "владельцев автомобилей"
     ];
-
+    const problems = [
+      "экономить время",
+      "находить новых клиентов",
+      "автоматизировать рутинную работу",
+      "увеличивать продажи",
+      "экономить деньги",
+      "анализировать данные",
+      "организовывать работу",
+      "быстрее отвечать клиентам",
+      "создавать контент",
+      "принимать решения",
+      "контролировать задачи",
+      "быстро находить нужную информацию",
+      "сравнивать предложения",
+      "прогнозировать спрос",
+      "управлять расписанием",
+      "собирать информацию в одном месте",
+      "не забывать о важных задачах",
+      "упрощать сложные процессы",
+      "использовать искусственный интеллект",
+      "работать полностью онлайн"
+    ];
+    const formats = [
+      "Telegram-бот",
+      "мобильное приложение",
+      "веб-сервис",
+      "AI-помощник",
+      "онлайн-платформа",
+      "браузерное расширение",
+      "сервис подписки",
+      "маркетплейс",
+      "автоматизированный сервис",
+      "CRM-система",
+      "аналитическая платформа",
+      "чат-бот",
+      "AI-сервис",
+      "онлайн-конструктор",
+      "умный помощник"
+    ];
+    const monetization = [
+      "ежемесячной подпиской",
+      "оплатой за использование",
+      "рекламой",
+      "премиум-функциями",
+      "комиссией с каждой сделки",
+      "моделью freemium",
+      "корпоративными тарифами",
+      "платным доступом к дополнительным функциям"
+    ];
+    /*
+      =====================================
+      СЛУЖЕБНЫЕ ПЕРЕМЕННЫЕ
+      =====================================
+    */
+    let generatedCount = 0;
+    const usedIdeas = new Set();
+    /*
+      =====================================
+      СЛУЧАЙНЫЙ ЭЛЕМЕНТ
+      =====================================
+    */
+    function randomItem(array) {
+      return array[
+        Math.floor(Math.random() * array.length)
+      ];
+    }
+    /*
+      =====================================
+      ГЕНЕРАЦИЯ ИДЕИ
+      =====================================
+    */
     function generateIdea() {
-  if (ideas.length === 0) {
-    document.getElementById("idea").textContent =
-      "Все идеи показаны! 🔄 Обнови страницу для нового круга.";
-    return;
-  }
-
-  const randomIndex = Math.floor(Math.random() * ideas.length);
-  const randomIdea = ideas.splice(randomIndex, 1)[0];
-
-  document.getElementById("idea").textContent = randomIdea;
-}
+      const totalCombinations =
+        niches.length *
+        problems.length *
+        formats.length *
+        monetization.length;
+      if (usedIdeas.size >= totalCombinations) {
+        document.getElementById("idea").innerHTML = `
+          <div class="idea-title">
+            🎉 Все комбинации использованы!
+          </div>
+          <div class="idea-text">
+            Мы сгенерировали все возможные варианты.
+            Обнови страницу, чтобы начать новый круг.
+          </div>
+        `;
+        return;
+      }
+      let niche;
+      let problem;
+      let format;
+      let money;
+      let uniqueKey;
+      do {
+        niche = randomItem(niches);
+        problem = randomItem(problems);
+        format = randomItem(formats);
+        money = randomItem(monetization);
+        uniqueKey =
+          niche + "|" +
+          problem + "|" +
+          format + "|" +
+          money;
+      }
+      while (usedIdeas.has(uniqueKey));
+      usedIdeas.add(uniqueKey);
+      generatedCount++;
+      const title =
+        `${format} для ${niche}`;
+      const description =
+        `Сервис, который помогает ${problem}.`;
+      const audience =
+        `Основные клиенты — владельцы бизнеса и специалисты из сферы ${niche}.`;
+      const businessModel =
+        `Заработок: ${money}.`;
+      document.getElementById("idea").innerHTML = `
+        <div class="idea-title">
+          💡 ${title}
+        </div>
+        <div class="idea-text">
+          <span class="label">Что делает:</span><br>
+          ${description}
+        </div>
+        <div class="idea-text">
+          <span class="label">Для кого:</span><br>
+          ${audience}
+        </div>
+        <div class="idea-text">
+          <span class="label">Монетизация:</span><br>
+          ${businessModel}
+        </div>
+      `;
+      document.getElementById("counter").textContent =
+        generatedCount;
+    }
   </script>
 </body>
 </html>
